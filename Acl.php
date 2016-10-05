@@ -13,15 +13,14 @@ namespace Eureka\Component\Acl;
  * Access Control Lists class.
  *
  * @author Romain Cottard
- * @version 2.1.0
+ * @version 1.0.0
  */
 class Acl
 {
-
     /**
      * List of Acl Resources
      *
-     * @var array $resources
+     * @var AclResource[] $resources
      */
     protected $resources = array();
 
@@ -45,14 +44,6 @@ class Acl
      * @var boolean $isCompiled
      */
     protected $isCompiled = false;
-
-    /**
-     * Class constructor.
-     *
-     * @return Acl Current class instance.
-     */
-    public function __construct()
-    {}
 
     /**
      * Compile acl data into a simplified array.
@@ -94,7 +85,9 @@ class Acl
     /**
      * Clear all rights are not used by current role.
      *
-     * @return Acl Current class instance
+     * @param  string $role
+     * @return self
+     * @throws \Exception
      */
     public function clearNotUsed($role)
     {
@@ -127,10 +120,8 @@ class Acl
      */
     public function addResource($resources, $ascendant = '')
     {
-        if (! is_array($resources)) {
+        if (!is_array($resources)) {
             $resources = array($resources => (string) $ascendant);
-        } else {
-            $resources = $resources;
         }
 
         //~ Add specified resource(s) to internal list.
@@ -149,7 +140,7 @@ class Acl
                 $ascendant = $this->resources[$ascendant];
             }
 
-            $this->resources[$name] = new Resource($name, $ascendant);
+            $this->resources[$name] = new AclResource($name, $ascendant);
         }
 
         return $this;
@@ -200,7 +191,7 @@ class Acl
      *
      * @param array $roles
      * @param array $resources
-     * @param array $rigt
+     * @param array $rights
      * @return Acl Current class instance.
      * @throws \Exception
      */
@@ -245,7 +236,7 @@ class Acl
      *
      * @param array $roles
      * @param array $resources
-     * @param array $rigt
+     * @param array $rights
      * @return Acl Current class instance.
      * @throws \Exception
      */

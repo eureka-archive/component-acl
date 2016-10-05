@@ -13,7 +13,7 @@ namespace Eureka\Component\Acl;
  * Access Control Lists Rights.
  *
  * @author Romain Cottard
- * @version 2.1.0
+ * @version 1.0.0
  */
 class Right
 {

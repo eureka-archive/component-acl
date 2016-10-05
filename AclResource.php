@@ -13,15 +13,14 @@ namespace Eureka\Component\Acl;
  * Access Control Lists Resource.
  *
  * @author Romain Cottard
- * @version 2.1.0
+ * @version 1.0.0
  */
-class Resource
+class AclResource
 {
-
     /**
      * Ascendant resource class instance
      *
-     * @var Eureka\Component\Acl\Resource $ascendant
+     * @var Resource $ascendant
      */
     protected $ascendant = null;
 
@@ -50,14 +49,13 @@ class Resource
      * Class constructor.
      *
      * @param string $name
-     * @param Eureka\Component\Acl\Resource $ascendant
-     * @return Eureka\Component\Acl\Resource Current class instance
+     * @param Resource $ascendant
      */
     public function __construct($name, $ascendant = null)
     {
         $this->name = $name;
 
-        if ($ascendant instanceof Resource) {
+        if ($ascendant instanceof AclResource) {
             $this->extend($ascendant);
         }
     }
@@ -75,7 +73,7 @@ class Resource
     /**
      * Get ascendant resource object
      *
-     * @return null|Eureka\Component\Acl\Resource
+     * @return Resource|null
      */
     public function getAscendant()
     {
@@ -91,7 +89,7 @@ class Resource
     {
         $ascendants = array();
 
-        if ($this->ascendant instanceof Resource) {
+        if ($this->ascendant instanceof AclResource) {
             $ascendants = array_merge(array($this->ascendant->getName() => $this->ascendant), $this->ascendant->getAscendants());
         }
 
@@ -102,7 +100,7 @@ class Resource
      * Set ascendant resource object.
      *
      * @param Resource $ascendant
-     * @return Resource Current class instance.
+     * @return self
      */
     public function extend(Resource $ascendant)
     {
@@ -116,7 +114,7 @@ class Resource
      *
      * @param string $role
      * @param array $rights Bitmask rights array
-     * @return Resource Current class instance.
+     * @return self
      */
     public function allow($role, $rights)
     {
@@ -138,7 +136,7 @@ class Resource
      *
      * @param string $role
      * @param array $rights Bitmask rights array
-     * @return Resource Current class instance.
+     * @return self
      */
     public function deny($role, $rights)
     {
@@ -164,7 +162,7 @@ class Resource
     {
         $rights = Right::NO_RIGHTS;
 
-        if ($this->ascendant instanceof Resource) {
+        if ($this->ascendant instanceof AclResource) {
             $rights = $this->ascendant->compile($role);
         }
 

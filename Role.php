@@ -13,11 +13,10 @@ namespace Eureka\Component\Acl;
  * Access Control Lists Role.
  *
  * @author Romain Cottard
- * @version 2.1.0
+ * @version 1.0.0
  */
 class Role
 {
-
     /**
      * Ascendant role object
      *
@@ -37,7 +36,6 @@ class Role
      *
      * @param string $name Role name.
      * @param null|Role $ascendant Ascendant role
-     * @return Role Current class instance.
      */
     public function __construct($name, $ascendant = null)
     {
@@ -71,7 +69,7 @@ class Role
     /**
      * Get list of ascendant roles
      *
-     * @return array List of ascendat roles.
+     * @return array List of ascendant roles.
      */
     public function getAscendants()
     {
