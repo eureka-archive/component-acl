@@ -18,16 +18,12 @@ namespace Eureka\Component\Acl;
 class Role
 {
     /**
-     * Ascendant role object
-     *
-     * @var null|Role $ascendant
+     * @var null|Role $ascendant Ascendant role object
      */
     protected $ascendant = null;
 
     /**
-     * Role name
-     *
-     * @var string $name
+     * @var string $name Role name
      */
     protected $name = null;
 

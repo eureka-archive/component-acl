@@ -9,8 +9,11 @@
 
 namespace Eureka\Component\Acl;
 
+use Eureka\Component\Debug\Debug;
+
+require_once __DIR__ . '/../../component-debug/Debug.php';
 require_once __DIR__ . '/../Acl.php';
-require_once __DIR__ . '/../Resource.php';
+require_once __DIR__ . '/../AclResource.php';
 require_once __DIR__ . '/../Role.php';
 require_once __DIR__ . '/../Right.php';
 
@@ -58,7 +61,7 @@ class AclTest extends \PHPUnit_Framework_TestCase
     {
         $acl = $this->init();
 
-        $acl->allow('root', Resource::all(), Right::all());
+        $acl->allow('root', AclResource::all(), Right::all());
 
         $test = '
           ||     home      ||    catalog    ||    import     ||     album     ||     track     ||
@@ -97,14 +100,14 @@ class AclTest extends \PHPUnit_Framework_TestCase
         $acl->addRole('vk', 'dev');
 
         //~ For 'admin' role, allow all rights for all resources.
-        $acl->allow('admin', Resource::all(), Right::all());
+        $acl->allow('admin', AclResource::all(), Right::all());
 
         //~ For 'guest' role deny all rights for all resources.
-        $acl->deny('guest', Resource::all(), Right::all());
+        $acl->deny('guest', AclResource::all(), Right::all());
 
         //~ For 'dev' & 'edito' role allow all rights for all resources.
         $acl->allow(array('dev', 'edito'), array('home', 'catalog'), Right::all());
-        $acl->deny(array('dev', 'edito'), Resource::all(), Right::get('delete'));
+        $acl->deny(array('dev', 'edito'), AclResource::all(), Right::get('delete'));
         $acl->deny('edito', 'catalog', Right::all());
         $acl->deny('dev', 'import', array(Right::get('create'), Right::get('update')));
 
@@ -143,23 +146,23 @@ class AclTest extends \PHPUnit_Framework_TestCase
      * @covers Acl::__construct
      * @covers Acl::allow
      * @covers Acl::deny
-     * @covers Resuorce::all
+     * @covers AclResource::all
      * @covers Right::all
      */
     public function testAcl()
     {
         $acl = $this->init();
 
-        $acl->allow('root', Resource::all(), Right::all());
-        $acl->deny('guest', Resource::all(), Right::all());
+        $acl->allow('root', AclResource::all(), Right::all());
+        $acl->deny('guest', AclResource::all(), Right::all());
 
-        $acl->deny('admin', Resource::all(), Right::get('delete'));
-        $acl->deny(array('dev', 'edito'), Resource::all(), array(Right::get('create'), Right::get('update')));
+        $acl->deny('admin', AclResource::all(), Right::get('delete'));
+        $acl->deny(array('dev', 'edito'), AclResource::all(), array(Right::get('create'), Right::get('update')));
         $acl->allow('dev', 'import', Right::all());
 
         $acl->allow('edito', 'album', array(Right::get('create'), Right::get('update'), Right::get('read')));
         $acl->allow('edito', 'catalog', Right::get('delete'));
-        /* R: Herit allow from Role, r: Herit deny from Role, S: Herit from Resource, s: Herit deny from Resource, o: Deny, -: No rights
+        /* R: Inherit allow from Role, r: Inherit deny from Role, S: Inherit from Resource, s: Inherit deny from Resource, o: Deny, -: No rights
                   ||      home     ||   catalog     ||    import     ||    album      ||    track      ||
                   || C | R | U | D || C | R | U | D || C | R | U | D || C | R | U | D || C | R | U | D ||
          | root   || x | x | x | x || x | x | x | x || x | x | x | x || x | x | x | x || x | x | x | x ||
@@ -197,7 +200,7 @@ class AclTest extends \PHPUnit_Framework_TestCase
         //  Role: ALL, Resource: catalog, Rights: read
         //--------------------------------------------------------
         $acl->allow(Role::all(), 'catalog', Right::get('read'));
-        /* R: Herit allow from Role, r: Herit deny from Role, S: Herit from Resource, s: Herit deny from Resource, o: Deny, -: No rights
+        /* R: Inherit allow from Role, r: Inherit deny from Role, S: Inherit from Resource, s: Inherit deny from Resource, o: Deny, -: No rights
                   ||      home     ||   catalog     ||    import     ||    album      ||    track      ||
                   || C | R | U | D || C | R | U | D || C | R | U | D || C | R | U | D || C | R | U | D ||
          | root   || - | - | - | - || - | x | - | - || - | S | - | - || - | S | - | - || - | S | - | - ||
@@ -220,8 +223,8 @@ class AclTest extends \PHPUnit_Framework_TestCase
         //--------------------------------------------------------
         //  Role: guest, Resource: ALL, Rights: ALL
         //--------------------------------------------------------
-        $acl->allow('guest', Resource::all(), Right::all());
-        /* R: Herit allow from Role, r: Herit deny from Role, S: Herit from Resource, s: Herit deny from Resource, o: Deny, -: No rights
+        $acl->allow('guest', AclResource::all(), Right::all());
+        /* R: Inherit allow from Role, r: Inherit deny from Role, S: Inherit from Resource, s: Inherit deny from Resource, o: Deny, -: No rights
                   ||      home     ||   catalog     ||    import     ||    album      ||    track      ||
                   || C | R | U | D || C | R | U | D || C | R | U | D || C | R | U | D || C | R | U | D ||
          | root   || - | - | - | - || - | x | - | - || - | S | - | - || - | S | - | - || - | S | - | - ||
@@ -244,8 +247,8 @@ class AclTest extends \PHPUnit_Framework_TestCase
         //--------------------------------------------------------
         //  Role: edito, Resource: ALL, Rights: read
         //--------------------------------------------------------
-        $Acl->allow('edito', Resource::all(), Right::get('read'));
-        /* R: Herit allow from Role, r: Herit deny from Role, S: Herit from Resource, s: Herit deny from Resource, o: Deny, -: No rights
+        $acl->allow('edito', AclResource::all(), Right::get('read'));
+        /* R: Inherit allow from Role, r: Inherit deny from Role, S: Inherit from Resource, s: Inherit deny from Resource, o: Deny, -: No rights
                   ||      home     ||   catalog     ||    import     ||    album      ||    track      ||
                   || C | R | U | D || C | R | U | D || C | R | U | D || C | R | U | D || C | R | U | D ||
          | root   || - | - | - | - || - | x | - | - || - | S | - | - || - | S | - | - || - | S | - | - ||
@@ -269,7 +272,7 @@ class AclTest extends \PHPUnit_Framework_TestCase
         //  Role: dev, Resource: import, Rights: create, delete
         //--------------------------------------------------------
         $acl->allow('admin', 'import', array(Right::get('create'), Right::get('delete')));
-        /* R: Herit allow from Role, r: Herit deny from Role, S: Herit from Resource, s: Herit deny from Resource, o: Deny, -: No rights
+        /* R: Inherit allow from Role, r: Inherit deny from Role, S: Inherit from Resource, s: Inherit deny from Resource, o: Deny, -: No rights
                   ||      home     ||   catalog     ||    import     ||    album      ||    track      ||
                   || C | R | U | D || C | R | U | D || C | R | U | D || C | R | U | D || C | R | U | D ||
          | root   || - | - | - | - || - | x | - | - || - | S | - | - || - | S | - | - || - | S | - | - ||
@@ -293,7 +296,7 @@ class AclTest extends \PHPUnit_Framework_TestCase
         //  Role: root, Resource: catalog, Rights: update
         //--------------------------------------------------------
         $acl->allow('root', 'album', Right::get('update'));
-        /* R: Herit allow from Role, r: Herit deny from Role, S: Herit from Resource, s: Herit deny from Resource, o: Deny, -: No rights
+        /* R: Inherit allow from Role, r: Inherit deny from Role, S: Inherit from Resource, s: Inherit deny from Resource, o: Deny, -: No rights
                   ||      home     ||   catalog     ||    import     ||    album      ||    track      ||
                   || C | R | U | D || C | R | U | D || C | R | U | D || C | R | U | D || C | R | U | D ||
          | root   || - | - | - | - || - | x | - | - || - | S | - | - || - | S | x | - || - | S | S | - ||
@@ -331,7 +334,7 @@ class AclTest extends \PHPUnit_Framework_TestCase
         //  Role: guest, Resource: track, Rights: update
         //--------------------------------------------------------
         $acl->deny(Role::all(), 'track', Right::get('update'));
-        /* R: Herit allow from Role, r: Herit deny from Role, S: Herit from Resource, s: Herit deny from Resource, o: Deny, -: No rights
+        /* R: Inherit allow from Role, r: Inherit deny from Role, S: Inherit from Resource, s: Inherit deny from Resource, o: Deny, -: No rights
                   ||      home     ||   catalog     ||    import     ||    album      ||    track      ||
                   || C | R | U | D || C | R | U | D || C | R | U | D || C | R | U | D || C | R | U | D ||
          | root   || - | - | - | - || - | x | - | - || - | S | - | - || - | S | x | - || - | S | o | - ||
@@ -354,8 +357,8 @@ class AclTest extends \PHPUnit_Framework_TestCase
         //--------------------------------------------------------
         //  Role: guest, Resource: ALL, Rights: ALL
         //--------------------------------------------------------
-        $acl->deny('guest', Resource::all(), Right::all());
-        /* R: Herit allow from Role, r: Herit deny from Role, S: Herit from Resource, s: Herit deny from Resource, o: Deny, -: No rights
+        $acl->deny('guest', AclResource::all(), Right::all());
+        /* R: Inherit allow from Role, r: Inherit deny from Role, S: Inherit from Resource, s: Inherit deny from Resource, o: Deny, -: No rights
                   ||      home     ||   catalog     ||    import     ||    album      ||    track      ||
                   || C | R | U | D || C | R | U | D || C | R | U | D || C | R | U | D || C | R | U | D ||
          | root   || - | - | - | - || - | x | - | - || - | S | - | - || - | S | x | - || - | S | o | - ||
@@ -378,8 +381,8 @@ class AclTest extends \PHPUnit_Framework_TestCase
         //--------------------------------------------------------
         //  Role: edito, Resource: ALL, Rights: read, delete
         //--------------------------------------------------------
-        $acl->deny('edito', Resource::all(), array(Right::get('read'), Right::get('delete')));
-        /* R: Herit allow from Role, r: Herit deny from Role, S: Herit from Resource, s: Herit deny from Resource, o: Deny, -: No rights
+        $acl->deny('edito', AclResource::all(), array(Right::get('read'), Right::get('delete')));
+        /* R: Inherit allow from Role, r: Inherit deny from Role, S: Inherit from Resource, s: Inherit deny from Resource, o: Deny, -: No rights
                   ||      home     ||   catalog     ||    import     ||    album      ||    track      ||
                   || C | R | U | D || C | R | U | D || C | R | U | D || C | R | U | D || C | R | U | D ||
          | root   || - | - | - | - || - | x | - | - || - | S | - | - || - | S | x | - || - | S | o | - ||
@@ -403,7 +406,7 @@ class AclTest extends \PHPUnit_Framework_TestCase
         //  Role: admin, Resource: import, Rights: read, delete
         //--------------------------------------------------------
         $acl->deny('admin', 'import', array(Right::get('read'), Right::get('delete')));
-        /* R: Herit allow from Role, r: Herit deny from Role, S: Herit from Resource, s: Herit deny from Resource, o: Deny, -: No rights
+        /* R: Inherit allow from Role, r: Inherit deny from Role, S: Inherit from Resource, s: inherit deny from Resource, o: Deny, -: No rights
                   ||      home     ||   catalog     ||    import     ||    album      ||    track      ||
                   || C | R | U | D || C | R | U | D || C | R | U | D || C | R | U | D || C | R | U | D ||
          | root   || - | - | - | - || - | x | - | - || - | S | - | - || - | S | x | - || - | S | o | - ||
@@ -427,7 +430,7 @@ class AclTest extends \PHPUnit_Framework_TestCase
         //  Role: root, Resource: catalog, Rights: read
         //--------------------------------------------------------
         $acl->deny('root', 'catalog', array(Right::get('read'), Right::get('delete')));
-        /* R: Herit allow from Role, r: Herit deny from Role, S: Herit from Resource, s: Herit deny from Resource, o: Deny, -: No rights
+        /* R: Inherit allow from Role, r: Inherit deny from Role, S: Inherit from Resource, s: Inherit deny from Resource, o: Deny, -: No rights
                   ||      home     ||   catalog     ||    import     ||    album      ||    track      ||
                   || C | R | U | D || C | R | U | D || C | R | U | D || C | R | U | D || C | R | U | D ||
          | root   || - | - | - | - || - | o | - | o || - | s | - | s || - | s | x | s || - | s | o | s ||

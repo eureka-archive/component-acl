@@ -79,7 +79,7 @@ class Right
      * Helper method.
      * Return bitmask value for all rights.
      *
-     * @return integer
+     * @return array
      */
     public static function all()
     {

@@ -18,30 +18,22 @@ namespace Eureka\Component\Acl;
 class AclResource
 {
     /**
-     * Ascendant resource class instance
-     *
-     * @var Resource $ascendant
+     * @var Resource $ascendant Ascendant resource class instance
      */
     protected $ascendant = null;
 
     /**
-     * Resource name.
-     *
-     * @var string $name
+     * @var string $name Resource name.
      */
     protected $name = '';
 
     /**
-     * List of rights
-     *
-     * @var array $rights
+     * @var array $rights List of rights
      */
     protected $rights = array();
 
     /**
-     * List of roles
-     *
-     * @var array $roles
+     * @var array $roles List of roles
      */
     protected $roles = array();
 
@@ -99,10 +91,10 @@ class AclResource
     /**
      * Set ascendant resource object.
      *
-     * @param Resource $ascendant
+     * @param AclResource $ascendant
      * @return self
      */
-    public function extend(Resource $ascendant)
+    public function extend(AclResource $ascendant)
     {
         $this->ascendant = $ascendant;
 
@@ -118,7 +110,7 @@ class AclResource
      */
     public function allow($role, $rights)
     {
-        $rights = ! is_array($rights) ? array($rights) : $rights;
+        $rights = !is_array($rights) ? array($rights) : $rights;
 
         if (! isset($this->rights[$role])) {
             $this->rights[$role] = array();
@@ -140,6 +132,8 @@ class AclResource
      */
     public function deny($role, $rights)
     {
+        $rights = !is_array($rights) ? array($rights) : $rights;
+
         if (! isset($this->rights[$role])) {
             $this->rights[$role] = array();
         }
@@ -170,12 +164,12 @@ class AclResource
         $roles = $role->getAscendants();
         $roles[$role->getName()] = $role;
 
-        foreach ($roles as $roleAscendant => $roleAscendant) {
-            if (! isset($this->rights[$roleAscendant])) {
+        foreach ($roles as $roleNameAscendant => $roleAscendant) {
+            if (! isset($this->rights[$roleNameAscendant])) {
                 continue;
             }
 
-            foreach ($this->rights[$roleAscendant] as $right => $isAllowed) {
+            foreach ($this->rights[$roleNameAscendant] as $right => $isAllowed) {
                 if ($isAllowed) {
                     $rights = $rights | $right;
                 } else {
