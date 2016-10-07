@@ -13,7 +13,6 @@ namespace Eureka\Component\Acl;
  * Access Control Lists Role.
  *
  * @author Romain Cottard
- * @version 1.0.0
  */
 class Role
 {
@@ -30,7 +29,7 @@ class Role
     /**
      * Class constructor.
      *
-     * @param string $name Role name.
+     * @param string    $name Role name.
      * @param null|Role $ascendant Ascendant role
      */
     public function __construct($name, $ascendant = null)

@@ -13,7 +13,6 @@ namespace Eureka\Component\Acl;
  * Access Control Lists Resource.
  *
  * @author Romain Cottard
- * @version 1.0.0
  */
 class AclResource
 {
@@ -40,7 +39,7 @@ class AclResource
     /**
      * Class constructor.
      *
-     * @param string $name
+     * @param string   $name
      * @param Resource $ascendant
      */
     public function __construct($name, $ascendant = null)
@@ -105,14 +104,14 @@ class AclResource
      * Allow specified role name with rights to current resource.
      *
      * @param string $role
-     * @param array $rights Bitmask rights array
+     * @param array  $rights Bitmask rights array
      * @return self
      */
     public function allow($role, $rights)
     {
         $rights = !is_array($rights) ? array($rights) : $rights;
 
-        if (! isset($this->rights[$role])) {
+        if (!isset($this->rights[$role])) {
             $this->rights[$role] = array();
         }
 
@@ -127,14 +126,14 @@ class AclResource
      * Deny specified role name with rights to current resource.
      *
      * @param string $role
-     * @param array $rights Bitmask rights array
+     * @param array  $rights Bitmask rights array
      * @return self
      */
     public function deny($role, $rights)
     {
         $rights = !is_array($rights) ? array($rights) : $rights;
 
-        if (! isset($this->rights[$role])) {
+        if (!isset($this->rights[$role])) {
             $this->rights[$role] = array();
         }
 
@@ -161,11 +160,11 @@ class AclResource
         }
 
         //~ Compile ascendants rights & add current role at end
-        $roles = $role->getAscendants();
+        $roles                   = $role->getAscendants();
         $roles[$role->getName()] = $role;
 
         foreach ($roles as $roleNameAscendant => $roleAscendant) {
-            if (! isset($this->rights[$roleNameAscendant])) {
+            if (!isset($this->rights[$roleNameAscendant])) {
                 continue;
             }
 
@@ -173,7 +172,7 @@ class AclResource
                 if ($isAllowed) {
                     $rights = $rights | $right;
                 } else {
-                    $rights = $rights & (~ $right);
+                    $rights = $rights & (~$right);
                 }
             }
         }

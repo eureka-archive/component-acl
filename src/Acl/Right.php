@@ -13,35 +13,24 @@ namespace Eureka\Component\Acl;
  * Access Control Lists Rights.
  *
  * @author Romain Cottard
- * @version 1.0.0
  */
 class Right
 {
-
     /**
-     * Bitmask value for no rights.
-     *
-     * @var integer NO_RIGHTS
+     * @var integer NO_RIGHTS Bitmask value for no rights.
      */
     const NO_RIGHTS = 0;
 
     /**
-     * Bitmask value for all rights.
-     *
-     * @var integer $allRights
+     * @var integer $allRights Bitmask value for all rights.
      */
     protected static $allRights = 15;
 
     /**
-     * List of rights name with bitmask value associated.
-     *
-     * @var array $rights
+     * @var array $rights List of rights name with bitmask value associated.
      */
     protected static $rights = array(
-        'create' => 1,
-        'read' => 2,
-        'update' => 4,
-        'delete' => 8
+        'create' => 1, 'read' => 2, 'update' => 4, 'delete' => 8,
     );
 
     /**
@@ -57,7 +46,7 @@ class Right
         }
 
         static::$rights[$name] = static::$allRights + 1;
-        static::$allRights = ((static::$allRights + 1) * 2) - 1;
+        static::$allRights     = ((static::$allRights + 1) * 2) - 1;
     }
 
     /**
@@ -68,7 +57,7 @@ class Right
      */
     public static function get($name)
     {
-        if (! isset(static::$rights[$name])) {
+        if (!isset(static::$rights[$name])) {
             return static::NO_RIGHTS;
         }
 
@@ -91,8 +80,9 @@ class Right
      *
      * @return void
      */
-    public static function reset() {
+    public static function reset()
+    {
         static::$allRights = static::NO_RIGHTS;
-        static::$rights = array();
+        static::$rights    = array();
     }
 }

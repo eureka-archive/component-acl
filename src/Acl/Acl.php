@@ -13,7 +13,6 @@ namespace Eureka\Component\Acl;
  * Access Control Lists class.
  *
  * @author Romain Cottard
- * @version 1.0.0
  */
 class Acl
 {
@@ -23,12 +22,12 @@ class Acl
     protected $resources = array();
 
     /**
-     * @var array $rights List of Acl Rights
+     * @var int[] $rights List of Acl Rights
      */
     protected $rights = array();
 
     /**
-     * @var array $roles List of Acl Roles
+     * @var Role[] $roles List of Acl Roles
      */
     protected $roles = array();
 

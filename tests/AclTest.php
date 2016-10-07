@@ -9,9 +9,6 @@
 
 namespace Eureka\Component\Acl;
 
-use Eureka\Component\Debug\Debug;
-
-require_once __DIR__ . '/../../component-debug/Debug.php';
 require_once __DIR__ . '/../Acl.php';
 require_once __DIR__ . '/../AclResource.php';
 require_once __DIR__ . '/../Role.php';
@@ -21,7 +18,6 @@ require_once __DIR__ . '/../Right.php';
  * Access Control Lists Role.
  *
  * @author Romain Cottard
- * @version 2.1.0
  */
 class AclTest extends \PHPUnit_Framework_TestCase
 {
